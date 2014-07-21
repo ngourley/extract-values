@@ -38,22 +38,22 @@
 			matched.push(all_pattern_matches[x].match(pattern_regex));
 		};
 		
-    // Allow exact string matches to return an empty object instead of null
-    if (!tokens) {
-      return (str == pattern) ? {} : null
-    }
+	// Allow exact string matches to return an empty object instead of null
+	if (!tokens) {
+	  return (str == pattern) ? {} : null
+	}
 
-    var output = [];
+	var output = [];
 
-    for(var x = 0; x < matched.length; x++) {
+	for(var x = 0; x < matched.length; x++) {
 
-    	output[x] = {};
-    	var single_match = matched[x].splice(1);
+		output[x] = {};
+		var single_match = matched[x].splice(1);
 
-    	for(var y = 0; y < tokens.length; y++) {
-    		output[x][tokens[y].replace( new RegExp( delimiters[0] + "|" + delimiters[1], "g"), "")] = single_match[y];
-    	}
-    }
+		for(var y = 0; y < tokens.length; y++) {
+			output[x][tokens[y].replace( new RegExp( delimiters[0] + "|" + delimiters[1], "g"), "")] = single_match[y];
+		}
+	}
 
 	return output;
 	
