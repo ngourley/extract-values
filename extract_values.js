@@ -1,5 +1,7 @@
 (function() {
 
+	var __ = require('underscore');
+
 	var extractValues = function(str, pattern, options) {
 		options = options || {};
 		var delimiters = options.delimiters || ["{", "}"];
@@ -22,10 +24,29 @@
 				var whitespace_str = "";
 				for (var i = 0; i < whitespace; i++) {
 					whitespace_str = whitespace_str + match.charAt(0);
-				};
+				}
 				return whitespace_str;
 			});
-		};
+		}
+
+		var nonTokens = pattern
+			.replace(token_regex, "")
+			.replace(special_chars_regex, "")
+			.replace(/[:]/g, "")
+			.split("\n")
+			.filter(function(val) {return val !== ""})
+			.map(function (val) { return val.trim()});
+
+		var missingNonToken = false;
+		__.each(nonTokens, function (nonTokens) {
+			if (str.indexOf(nonTokens) === -1) {
+				missingNonToken = true;
+			}
+		});
+
+		if (missingNonToken === true) {
+			return null;
+		}
 
 		var all_pattern_matches = str.match(global_pattern_regex);
 
@@ -37,7 +58,7 @@
 		for (var x = 0; x < all_pattern_matches.length; x++) {
 			matched.push(all_pattern_matches[x].match(pattern_regex));
 		};
-		
+
 	// Allow exact string matches to return an empty object instead of null
 	if (!tokens) {
 	  return (str == pattern) ? {} : null
@@ -56,7 +77,7 @@
 	}
 
 	return output;
-	
+
 
 	}
 
@@ -65,5 +86,5 @@
 	} else {
 		module.exports = extractValues;
 	}
-	
+
 })();
